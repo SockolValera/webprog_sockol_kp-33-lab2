@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <title th:text="${ticket.id != null} ? 'Edit Ticket' : 'Create Ticket'">Ticket</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #121212;
+            color: #f1f1f1;
+            padding: 2em;
+            max-width: 600px;
+            margin: auto;
+        }
+        h1 {
+            color: #e50914;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 1em;
+        }
+        input, select {
+            width: 100%;
+            padding: 0.5em;
+            margin-top: 0.2em;
+            border: 1px solid #444;
+            background-color: #1e1e1e;
+            color: #fff;
+        }
+        input:focus, select:focus {
+            border-color: #e50914;
+            outline: none;
+        }
+        button {
+            margin-top: 2em;
+            width: 100%;
+            padding: 0.7em;
+            background-color: #e50914;
+            border: none;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #b0060f;
+        }
+        .error {
+            color: #ff6b6b;
+            font-size: 0.9em;
+        }
+        a {
+            color: #e50914;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1em;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<h1 th:text="${ticket.id != null} ? 'Edit Ticket' : 'Create Ticket'"></h1>
+
+<form th:action="@{/tickets}" th:object="${ticket}" method="post">
+    <input type="hidden" th:field="*{id}"/>
+
+    <label>Seat Number:
+        <input type="number" th:field="*{seatNumber}" min="1" max="50" required/>
+        <div th:if="${#fields.hasErrors('seatNumber')}" th:errors="*{seatNumber}" class="error"></div>
+    </label>
+
+    <label>Price:
+        <input type="number" step="5.0" th:field="*{price}" min="0" required/>
+        <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="error"></div>
+    </label>
+
+    <label>Cinema:
+        <select required>
+            <option th:each="c : ${cinemas}"
+                    th:value="${c.id}"
+                    th:text="${c.name + ' — ' + c.address}">
+            </option>
+        </select>
+    </label>
+
+    <label>Session:
+        <select th:field="*{session}" required>
+            <option th:each="s : ${sessions}"
+                    th:value="${s.id}"
+                    th:text="${s.movieTitle + ' — ' + s.startTime}">
+            </option>
+        </select>
+    </label>
+
+    <button type="submit">Save Ticket</button>
+    <a th:href="@{/tickets}">← Back to List</a>
+</form>
+
+</body>
+</html>
